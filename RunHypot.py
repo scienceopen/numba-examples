@@ -16,7 +16,7 @@ import numpy as np
 try:
     from matplotlib.pyplot import figure
 except (ImportError, RuntimeError):
-    figure = None
+    figure = None  # type: ignore
 
 bdir = Path(__file__).parent
 cdir = bdir / "build"
@@ -43,18 +43,14 @@ def bench_hypot(N, Nrun):
         print("N=", n)
         thy = timeit.repeat(
             "np.hypot(a, b)",
-            "import gc; gc.enable();import numpy as np; a = np.arange({},dtype=float); b = a.copy()".format(
-                n
-            ),
+            f"import gc; gc.enable();import numpy as np; a = np.arange({n},dtype=float); b = a.copy()",
             repeat=Nrun,
             number=3 * Nrun,
         )
 
         tsq = timeit.repeat(
             "np.sqrt(a**2+b**2)",
-            "import gc; gc.enable();import numpy as np; a = np.arange({},dtype=float); b = a.copy()".format(
-                n
-            ),
+            f"import gc; gc.enable();import numpy as np; a = np.arange({n},dtype=float); b = a.copy()",
             repeat=Nrun,
             number=3 * Nrun,
         )
@@ -66,7 +62,7 @@ def bench_hypot(N, Nrun):
 
 def plotspeed(N, pyrat, fortrat):
     pyver = sys.version_info
-    pyver = "{}.{}.{}".format(pyver[0], pyver[1], pyver[2])
+    pyver = f"{pyver[0]}.{pyver[1]}.{pyver[2]}"
 
     fortver = (
         subprocess.check_output(["gfortran", "--version"], text=True).split("\n")[0].split(" ")[-1]
@@ -80,9 +76,7 @@ def plotspeed(N, pyrat, fortrat):
         ax.plot(N, fortrat, label="Fortran")
 
     ax.set_title(
-        "timeit(sqrt(a**2+b**2)) / timeit(hypot(a,b)) \n Numpy {} Python {} Gfortran {}".format(
-            np.__version__, pyver, fortver
-        )
+        f"timeit(sqrt(a**2+b**2)) / timeit(hypot(a,b)) \n Numpy {np.__version__} Python {pyver} Gfortran {fortver}"
     )
     ax.set_xscale("log")
     ax.legend(loc="best")

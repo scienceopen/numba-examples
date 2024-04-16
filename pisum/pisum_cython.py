@@ -23,14 +23,14 @@ def main():
     print("--> Cython ", cython.__version__, "N=", p.N)
 
     t = timeit.repeat(
-        "cpisum.pisum({})".format(p.N),
+        f"cpisum.pisum({p.N})",
         "import gc; gc.enable(); import cpisum",
         repeat=p.Nrun,
         number=1,
     )
 
     t = min(t)
-    print("{:.3e} seconds.".format(t))
+    print(f"{t:.3e} seconds.")
 
 
 if __name__ == "__main__":

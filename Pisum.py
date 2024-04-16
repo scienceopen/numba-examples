@@ -14,7 +14,7 @@ import benchmark as pb
 try:
     from matplotlib.pyplot import figure
 except ImportError:
-    figure = None
+    figure = None  # type: ignore
 
 bdir = Path(__file__).parent / "pisum"
 cdir = Path(__file__).parent / "build"
@@ -100,7 +100,7 @@ def benchmark_pisum(N: int, Nrun: int) -> dict[str, float]:
         pass
 
     try:
-        t = pb.run(["matlab", "-batch", "pisum({},{}); exit".format(N, Nrun)], bdir)
+        t = pb.run(["matlab", "-batch", f"pisum({N},{Nrun}); exit"], bdir)
         times["matlab \n" + t[1]] = t[0]
     except EnvironmentError:
         pass

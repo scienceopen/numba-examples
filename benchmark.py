@@ -77,8 +77,13 @@ def run(cmd: list[str | None], bdir: Path, lang: str | None = None) -> tuple[flo
     path = None
     exe = None
     if cmd[0] == "octave-cli":
-        if oc := os.getenv("OCTAVE_EXECUTABLE"):
-            path = Path(oc).parent
+        if hint := os.getenv("OCTAVE_EXECUTABLE"):
+            path = Path(hint).parent
+        if path:
+            exe = shutil.which(cmd[0], path=path)
+    if cmd[0] == "matlab":
+        if hint := os.getenv("Matlab_ROOT"):
+            path = Path(hint) / "bin"
         if path:
             exe = shutil.which(cmd[0], path=path)
     if not exe:

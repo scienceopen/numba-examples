@@ -26,14 +26,14 @@ def main():
 
     print("--> Python", platform.python_version(), "N=", p.N)
     t = timeit.repeat(
-        "pisum_c({})".format(p.N),
+        f"pisum_c({p.N})",
         "import gc; gc.enable(); from __main__ import pisum_c",
         repeat=p.Nrun,
         number=1,
     )
 
     t = min(t)
-    print("{:.3e} seconds.".format(t))
+    print(f"{t:.3e} seconds.")
 
 
 if __name__ == "__main__":

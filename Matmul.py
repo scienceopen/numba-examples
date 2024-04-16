@@ -3,13 +3,15 @@ from pathlib import Path
 from argparse import ArgumentParser
 import typing as T
 import shutil
+import logging
+import platform
 
 import benchmark as pb
 
 try:
     from matplotlib.pyplot import figure
 except ImportError:
-    figure = None
+    figure = None  # type: ignore
 
 bdir = Path(__file__).parent / "matmul"
 cdir = Path(__file__).parent / "build" / "matmul"
@@ -30,7 +32,7 @@ def main():
         ax = fg.gca()
         ax.scatter(times.keys(), times.values())
 
-        ax.set_title("Matmul, N={}".format(p.N))
+        ax.set_title(f"Matmul, N={p.N}  {platform.system()}")
         ax.set_ylabel("run time [sec.]")
         # ax.set_yscale('log')
         ax.grid(True)
@@ -75,13 +77,13 @@ def benchmark_matmul(N: int, Nrun: int) -> T.Dict[str, float]:
         t = pb.run(["octave-cli", "--eval", f"matmul({N},{Nrun})"], bdir)
         times["octave \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Octave not found")
 
     try:
         t = pb.run(["matlab", "-batch", f"matmul({N},{Nrun})"], bdir)
         times["matlab \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Matlab not found")
 
     try:
         t = pb.run(["python", "matmul.py", str(N), str(Nrun)], bdir)

@@ -27,16 +27,16 @@ def main():
     if not np.isclose(np.pi, pisum(p.N), rtol=1e-4):
         raise SystemExit("Numba convergence error")
 
-    print("--> Numba {}".format(numba.__version__), "N=", p.N)
+    print(f"--> Numba {numba.__version__}", "N=", p.N)
     t = timeit.repeat(
-        "pisum({})".format(p.N),
+        f"pisum({p.N})",
         "import gc; gc.enable(); from __main__ import pisum",
         repeat=p.Nrun,
         number=1,
     )
 
     t = min(t)
-    print("{:.3e} seconds.".format(t))
+    print(f"{t:.3e} seconds.")
 
 
 if __name__ == "__main__":
