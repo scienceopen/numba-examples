@@ -32,7 +32,7 @@ def main():
         ax = fg.gca()
         ax.scatter(times.keys(), times.values())
 
-        ax.set_title(f"Matmul, N={p.N}  {platform.system()}")
+        ax.set_title(f"Matmul, N={p.N}    {platform.system()}  {platform.machine()}")
         ax.set_ylabel("run time [sec.]")
         # ax.set_yscale('log')
         ax.grid(True)
@@ -52,25 +52,25 @@ def benchmark_matmul(N: int, Nrun: int) -> T.Dict[str, float]:
         t = pb.run([matmul_exe, str(N), str(Nrun)], cdir, "fortran")
         times["Fortran\n" + compinf["fc"] + "\n" + compinf["fcvers"]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Fortran compiler not found")
 
     try:
         t = pb.run(["julia", "matmul.jl", str(N)], bdir)
         times["julia \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Julia not found")
 
     try:
         t = pb.run(["gdl", "-q", "-e", "matmul", "-arg", str(N)], bdir)
         times["gdl \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("GDL not found")
 
     try:
         t = pb.run(["idl", "-quiet", "-e", "matmul", "-arg", str(N)], bdir)
         times["idl \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("IDL not found")
 
     # octave-cli, not octave in general
     try:
@@ -85,11 +85,8 @@ def benchmark_matmul(N: int, Nrun: int) -> T.Dict[str, float]:
     except EnvironmentError:
         logging.error("Matlab not found")
 
-    try:
-        t = pb.run(["python", "matmul.py", str(N), str(Nrun)], bdir)
-        times["python \n" + t[1]] = t[0]
-    except EnvironmentError:
-        pass
+    t = pb.run(["python", "matmul.py", str(N), str(Nrun)], bdir)
+    times["python \n" + t[1]] = t[0]
 
     return times
 

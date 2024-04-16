@@ -10,6 +10,7 @@ from pathlib import Path
 import timeit
 import sys
 import shutil
+import platform
 
 import numpy as np
 
@@ -76,7 +77,9 @@ def plotspeed(N, pyrat, fortrat):
         ax.plot(N, fortrat, label="Fortran")
 
     ax.set_title(
-        f"timeit(sqrt(a**2+b**2)) / timeit(hypot(a,b)) \n Numpy {np.__version__} Python {pyver} Gfortran {fortver}"
+        "timeit(sqrt(a**2+b**2)) / timeit(hypot(a,b))\n"
+        f"Numpy {np.__version__} Python {pyver} Gfortran {fortver}\n"
+        f"{platform.system()} {platform.machine()}"
     )
     ax.set_xscale("log")
     ax.legend(loc="best")

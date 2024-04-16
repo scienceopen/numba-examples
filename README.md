@@ -41,6 +41,8 @@ Matrix Multiplication benchmarks:
 python Matmul.py
 ```
 
+![Matrix Multiplication benchmark](./gfx/matmul.png)
+
 ### Hypotenuse
 
 Observe that `hypot()` is faster from 1 to a few hundred elements, then
