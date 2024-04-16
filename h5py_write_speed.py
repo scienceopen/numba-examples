@@ -16,7 +16,7 @@ SIZE = (3, 200000)  # arbitrary size to test
 xb = random(SIZE) > 0.5  # mean ~ 0.5
 xbl = xb.tolist()
 
-with tempfile.NamedTemporaryFile() as fn:
+with tempfile.NamedTemporaryFile(suffix=".h5") as fn:
     with h5py.File(fn, "w") as h:
         tic = time()
         h["bool"] = xb
@@ -29,4 +29,5 @@ with tempfile.NamedTemporaryFile() as fn:
         # %% here's what nidaqmx gives us
         tic = time()
         h["listbool"] = xbl
-        print(f"{time()-tic:3e} sec. to write boolean from bool list")
+# outside context manager to help ensure HDF5 file is finalized
+print(f"{time()-tic:3e} sec. to write boolean from bool list")
