@@ -36,9 +36,12 @@ if(DEFINED ENV{MKLROOT})
 endif()
 
 
-set(BLA_F95 OFF)
-find_package(BLAS)
-if(BLAS_FOUND)
+if(NOT MKL_FOUND)
+  set(BLA_F95 OFF)
+  find_package(BLAS)
+endif()
+
+if(BLAS_FOUND OR MKL_FOUND)
   add_executable(matmul_fort matmul.f90)
   target_link_libraries(matmul_fort PRIVATE
     $<IF:$<BOOL:${MKL_FOUND}>,MKL::MKL,${BLAS_LIBRARIES}>
