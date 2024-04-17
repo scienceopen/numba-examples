@@ -61,14 +61,10 @@ inf
 Execute the Hypot speed test by:
 
 ```sh
-python RunHypot.py
+python Hypot.py
 ```
 
-![Python 3.6 hypot() vs rsq()](.gfx/py36hypot.png)
-
-![Python 2.7 hypot() vs rsq()](./gfx/py27hypot.png)
-
-![Python 3.5 hypot() vs rsq()](./gfx/py35hypot.png)
+![hypot() vs rsq()](.gfx/hypot.png)
 
 ## Notes
 

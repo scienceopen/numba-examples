@@ -77,7 +77,6 @@ def plotspeed(N, pyrat, fortrat):
         ax.plot(N, fortrat, label="Fortran")
 
     ax.set_title(
-        "timeit(sqrt(a**2+b**2)) / timeit(hypot(a,b))\n"
         f"Numpy {np.__version__} Python {pyver} Gfortran {fortver}\n"
         f"{platform.system()} {platform.machine()}"
     )
@@ -85,6 +84,7 @@ def plotspeed(N, pyrat, fortrat):
     ax.legend(loc="best")
     ax.grid(True, which="both")
     ax.set_xlabel("N length of vectors a,b")
+    ax.set_ylabel("timeit(sqrt($a^2+b^2$)) / timeit(hypot(a,b))")
 
     figfn = bdir / "hypot.png"
     print("saved figure to", figfn)
