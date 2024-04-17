@@ -1,16 +1,8 @@
 function matmul(N, Nrun)
 
 addpath('..')  % isoctave
-if nargin < 2, Nrun=10; end
-%%
-if isoctave
-  v = ver('octave'); % else matlab syntax checker errors
-  disp(['--> Octave ', v.Version])
-else
-  v = ver('matlab');
-  disp(['--> Matlab ',v.Version])
-end
-%%
+
+print_version()
 
 A = randn(N,N);
 B = randn(N,N);

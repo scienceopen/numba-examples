@@ -1,15 +1,8 @@
 function pisum(N, Nrun)
 
 addpath('..')  % isoctave
-if nargin<2, Nrun=3; end
 
-if isoctave
-  v = ver('octave'); % else matlab syntax checker errors
-  disp(['--> Octave ', v.Version])
-else
-  v = ver('matlab');
-  disp(['--> Matlab ', v.Release(2:end-1)])
-end
+print_version()
 
 pitry = calcpisum(N);
 
