@@ -4,28 +4,21 @@ addpath('..')  % isoctave
 
 print_version()
 
-pitry = calcpisum(N);
+pitry = calc_pisum(N);
 
 if abs(pitry-pi)>1e-4
   error('Pisum: failed to converge')
 end
 
-try
-  f = @() calcpisum(N);
-  t = timeit(f);
-catch
-  t = inf;
-  for i = 1:Nrun
-    tic
-    calcpisum(N);
-    t = min(toc,t);
-  end
-end % try
+f = @() calc_pisum(N);
+
+t = bench_time(f, Nrun);
+
 disp([num2str(t),' sec.'])
 
 end % function pisum
 %%
-function x = calcpisum(N)
+function x = calc_pisum(N)
 s = 0.;
 for k = 1:N
   s = s + (-1)^(k+1) / (2*k-1);

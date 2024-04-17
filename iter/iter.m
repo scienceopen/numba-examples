@@ -1,15 +1,15 @@
+% like iter.f90
+Nrun = 10;
+N = 100000;
 
-fprintf('simple_iter ')
+addpath('..')
+
 A = rand(N,1);
-try
-  f = @() simple_iter(A); % this anon function required by timeit
-  t=timeit(f);
-catch
-  t = inf;
-  tic
-  simple_iter(A);
-  t = min(toc,t);
-end
+
+f = @() simple_iter(A);
+
+t = bench_time(f, Nrun);
+
 disp([num2str(t),' sec.'])
 
 %%
