@@ -46,7 +46,9 @@ def compiler_info() -> dict[str, str]:
                 ret = subprocess.check_output([cc, "--version"], text=True).split("\n")
                 cvers = ret[1].split()[1][:5]
             case _:
-                ret = subprocess.run([cc, "--version"], text=True, capture_output=True).stdout.split("\n")
+                ret = subprocess.run(
+                    [cc, "--version"], text=True, capture_output=True
+                ).stdout.split("\n")
                 cvers = ret[0].split()[-1]
 
         match fc:
@@ -62,7 +64,9 @@ def compiler_info() -> dict[str, str]:
                 ret = subprocess.check_output([fc, "--version"], text=True).split("\n")
                 fvers = ret[1].split()[1][:5]
             case _:
-                ret = subprocess.run([fc, "--version"], text=True, capture_output=True).stdout.split("\n")
+                ret = subprocess.run(
+                    [fc, "--version"], text=True, capture_output=True
+                ).stdout.split("\n")
                 fvers = ret[0].split()[-1]
 
     except (FileNotFoundError, subprocess.CalledProcessError):
@@ -108,22 +112,15 @@ def run(cmd: list[str | None], bdir: Path, lang: str | None = None) -> tuple[flo
     t = float(ret[-2].split()[0])
     # %% version
     vers = ""
-
-    if cmd[0] in {
-        "julia",
-        "cython",
-        "matlab",
-        "numba",
-        "python",
-        "octave",
-        "octave-cli",
-        "pypy",
-        "pypy3",
-    }:
+    cmd_stem = Path(cmd[0]).stem
+    if any(
+        s in cmd_stem
+        for s in {"julia", "cython", "matlab", "numba", "python", "octave", "octave-cli", "pypy"}
+    ):
         vers = ret[0].split()[2]
-    elif cmd[0] == "idl":
+    elif "idl" in cmd_stem:
         vers = ret[-3].split()[0]
-    elif cmd[0] == "gdl":
+    elif "gdl" in cmd_stem:
         vers = ret[-3].split()[0]
 
     return t, vers

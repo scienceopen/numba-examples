@@ -13,7 +13,7 @@ This command prepares Python prereqs:
 pip install -r requirements.txt
 ```
 
-Using the C and/or Fortran tests requires compilation using CMake.
+C and Fortran benchmarks requires building first using CMake.
 
 ```sh
 cmake --workflow --preset default
@@ -27,11 +27,7 @@ Iterative benchmarks, here using the pisum algorithm:
 python Pisum.py
 ```
 
-![Pi (Machin) benchmark Windows 10 Intel 19.1](./gfx/pisum_intel_9750.png)
-
-![Pi (Machin) benchmark Windows 10](./gfx/pisum_windows_9750H.png)
-
-![Pi (Machin) benchmark](./gfx/pisum_gcc_unplug-2019-01.png)
+![Pi (Machin) benchmark](./gfx/pisum.png)
 
 ---
 
