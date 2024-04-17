@@ -5,10 +5,12 @@ For high-speed in the loop writing where performance is critical.
 """
 
 import tempfile
+import time
+
 from numpy.random import random
 from numpy import packbits
 import h5py
-from time import time
+
 
 SIZE = (3, 200000)  # arbitrary size to test
 
@@ -18,16 +20,22 @@ xbl = xb.tolist()
 
 with tempfile.NamedTemporaryFile(suffix=".h5") as fn:
     with h5py.File(fn, "w") as h:
-        tic = time()
+        tic = time.monotonic()
         h["bool"] = xb
-        print(f"{time()-tic:3e} sec. to write boolean from Numpy bool")
+    toc = time.monotonic()
+    print(f"{toc-tic:3e} sec. to write boolean from Numpy bool")
 
-        tic = time()
+    with h5py.File(fn, "w") as h:
+        tic = time.monotonic()
         xi = packbits(xbl, axis=0)  # each column becomes uint8 BIG-ENDIAN
         h["uint8"] = xi
-        print(f"{time()-tic:3e} sec. to write uint8")
+    toc = time.monotonic()
+    print(f"{toc-tic:3e} sec. to write uint8")
+
+    with h5py.File(fn, "w") as h:
         # %% here's what nidaqmx gives us
-        tic = time()
+        tic = time.monotonic()
         h["listbool"] = xbl
-# outside context manager to help ensure HDF5 file is finalized
-print(f"{time()-tic:3e} sec. to write boolean from bool list")
+    toc = time.monotonic()
+    # outside context manager to help ensure HDF5 file is finalized
+    print(f"{toc-tic:3e} sec. to write boolean from bool list")

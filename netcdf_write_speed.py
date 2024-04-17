@@ -15,10 +15,11 @@ NOTE: use NamedTemporaryFile to avoid fallback to scipy backend which is very fe
 """
 
 import tempfile
+import time
+
 from numpy.random import random
 from numpy import packbits
 import xarray
-from time import time
 
 
 SIZE = (3, 200000)  # arbitrary size to test
@@ -30,19 +31,22 @@ Xb = xarray.DataArray(xb, name="bool")
 
 
 with tempfile.NamedTemporaryFile(suffix=".nc") as f:
-    tic = time()
+    tic = time.monotonic()
     Xb.to_netcdf(f.name, "w")
-print(f"{time()-tic:.3f} sec. to write boolean from Numpy bool")
+    toc = time.monotonic()
+print(f"{toc-tic:.3f} sec. to write boolean from Numpy bool")
 
 with tempfile.NamedTemporaryFile(suffix=".nc") as f:
-    tic = time()
+    tic = time.monotonic()
     xi = packbits(xbl, axis=0)  # each column becomes uint8 BIG-ENDIAN
     Xi = xarray.DataArray(xi, name="uint8")
     Xi.to_netcdf(f.name, "w", engine="netcdf4")
-print(f"{time()-tic:.3f} sec. to write uint8")
+    toc = time.monotonic()
+print(f"{toc-tic:.3f} sec. to write uint8")
 # %% here's what nidaqmx gives us
 with tempfile.NamedTemporaryFile(suffix=".nc") as f:
-    tic = time()
+    tic = time.monotonic()
     Xbl = xarray.DataArray(xbl, name="listbool")
     Xbl.to_netcdf(f.name, "w")
-print(f"{time()-tic:.3f} sec. to write boolean from bool list")
+    toc = time.monotonic()
+print(f"{toc-tic:.3f} sec. to write boolean from bool list")
