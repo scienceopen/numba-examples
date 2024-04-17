@@ -45,9 +45,14 @@ python Matmul.py
 
 ### Hypotenuse
 
-Observe that `hypot()` is faster from 1 to a few hundred elements, then
-sqrt(x^2+y^2) becomes slightly faster. However, `hypot()` does not
-overflow for arguments near REALMAX. For example, in Python:
+For **Python**,
+[numpy.hypot()](https://numpy.org/doc/stable/reference/generated/numpy.hypot.html)
+is faster up to about a hundred elements, then
+[numpy.sqrt(x**2 + y**2)](https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html)
+becomes slightly faster.
+The benefit of `hypot()` is to not overflow for arguments near REALMAX.
+
+For example, in Python:
 
 ```python
 from math import sqrt, hypot
@@ -57,6 +62,8 @@ a=1e154; hypot(a,a); sqrt(a**2+a**2);
 1.414213562373095e+154
 inf
 ```
+
+For **Fortran**, observe that with Gfortran compiler that `sqrt(x**2 + y**2)` is slightly faster than `hypot(x,y)` in general across the tested array sizes.
 
 Execute the Hypot speed test by:
 
