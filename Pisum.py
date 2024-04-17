@@ -4,6 +4,7 @@ from pathlib import Path
 from argparse import ArgumentParser
 import math
 import sys
+import logging
 import platform
 import shutil
 
@@ -40,10 +41,11 @@ def main():
     if figure is not None and len(t) > 0:
         fg = figure()
         ax = fg.gca()
+
         for k, v in times.items():
             ax.scatter(v.keys(), v.values(), label=str(k))
 
-        ax.set_title(f"PiSum, N={p.N}   {platform.system()}")
+        ax.set_title(f"PiSum, N={p.N}    {platform.system()}  {platform.machine()}")
         ax.set_ylabel("run time [sec.]")
         ax.set_yscale("log")
         ax.grid(True)
@@ -78,32 +80,32 @@ def benchmark_pisum(N: int, Nrun: int) -> dict[str, float]:
         t = pb.run(["julia", "pisum.jl", str(N)], bdir)
         times["julia \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("julia: MISSING")
 
     try:
         t = pb.run(["gdl", "-q", "-e", "pisum", "-arg", str(N)], bdir)
         times["gdl \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("gdl: MISSING")
 
     try:
         t = pb.run(["idl", "-quiet", "-e", "pisum", "-arg", str(N)], bdir)
         times["idl \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("idl: MISSING")
 
     # octave-cli, not octave in general
     try:
         t = pb.run(["octave-cli", "--eval", f"pisum({N},{Nrun})"], bdir)
         times["octave \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Octave: MISSING")
 
     try:
         t = pb.run(["matlab", "-batch", f"pisum({N},{Nrun}); exit"], bdir)
         times["matlab \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("Matlab: MISSING")
 
     try:
         t = pb.run([sys.executable, "pisum.py", str(N), str(Nrun)], bdir)
@@ -115,7 +117,7 @@ def benchmark_pisum(N: int, Nrun: int) -> dict[str, float]:
         t = pb.run(["pypy3", "pisum.py", str(N), str(Nrun)], bdir)
         times["pypy \n" + t[1]] = t[0]
     except EnvironmentError:
-        pass
+        logging.error("pypy: MISSING")
 
     try:
         import cython  # noqa: F401
@@ -123,7 +125,7 @@ def benchmark_pisum(N: int, Nrun: int) -> dict[str, float]:
         t = pb.run([sys.executable, "pisum_cython.py", str(N), str(Nrun)], bdir)
         times["cython \n" + t[1]] = t[0]
     except ImportError:
-        pass
+        logging.error("cython: MISSING")
 
     try:
         import numba  # noqa: F401
@@ -131,7 +133,7 @@ def benchmark_pisum(N: int, Nrun: int) -> dict[str, float]:
         t = pb.run([sys.executable, "pisum_numba.py", str(N), str(Nrun)], bdir)
         times["numba \n" + t[1]] = t[0]
     except ImportError:
-        pass
+        logging.error("numba: MISSING")
 
     return times
 

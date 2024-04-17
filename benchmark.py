@@ -45,6 +45,9 @@ def compiler_info() -> dict[str, str]:
             case "nvcc":
                 ret = subprocess.check_output([cc, "--version"], text=True).split("\n")
                 cvers = ret[1].split()[1][:5]
+            case _:
+                ret = subprocess.run([cc, "--version"], text=True, capture_output=True).stdout.split("\n")
+                cvers = ret[0].split()[-1]
 
         match fc:
             case "flang":
@@ -58,6 +61,9 @@ def compiler_info() -> dict[str, str]:
             case "nvfortran":
                 ret = subprocess.check_output([fc, "--version"], text=True).split("\n")
                 fvers = ret[1].split()[1][:5]
+            case _:
+                ret = subprocess.run([fc, "--version"], text=True, capture_output=True).stdout.split("\n")
+                fvers = ret[0].split()[-1]
 
     except (FileNotFoundError, subprocess.CalledProcessError):
         pass
@@ -102,6 +108,7 @@ def run(cmd: list[str | None], bdir: Path, lang: str | None = None) -> tuple[flo
     t = float(ret[-2].split()[0])
     # %% version
     vers = ""
+
     if cmd[0] in {
         "julia",
         "cython",
