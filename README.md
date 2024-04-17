@@ -64,7 +64,7 @@ Execute the Hypot speed test by:
 python Hypot.py
 ```
 
-![hypot() vs rsq()](.gfx/hypot.png)
+![hypot() vs rsq()](./gfx/hypot.png)
 
 ## Notes
 
